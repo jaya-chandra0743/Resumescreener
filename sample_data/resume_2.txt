@@ -1,0 +1,14 @@
+Priya Sharma
+B.Tech Computer Science
+
+Summary
+Software engineer with 1 year of experience.
+
+Skills
+Python, FastAPI, SQL, Git, React
+
+Experience
+1 year of experience developing APIs and web applications.
+
+Projects
+Student management application using FastAPI, SQL and React.

@@ -1,0 +1,15 @@
+Arun Kumar
+B.Tech Computer Science
+
+Summary
+Backend developer with 3 years of experience building Java services.
+
+Skills
+Java, Spring Boot, REST API, SQL, Git, Docker, AWS
+
+Experience
+3 years of experience developing REST APIs and Spring Boot services.
+Built backend services using Java and Docker.
+
+Projects
+Online Bookstore API using Java, Spring Boot, MySQL and Docker.

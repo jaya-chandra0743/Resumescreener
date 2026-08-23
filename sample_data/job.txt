@@ -1,0 +1,21 @@
+Java Backend Developer
+
+We are looking for a backend developer with 2+ years of experience.
+
+Required skills:
+Java
+Spring Boot
+REST API
+SQL
+Git
+Docker
+
+Good to have:
+AWS
+Redis
+
+Responsibilities:
+Build scalable backend services.
+Design REST APIs.
+Write maintainable SQL.
+Collaborate with frontend and QA teams.

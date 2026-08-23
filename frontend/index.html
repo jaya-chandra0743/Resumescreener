@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Resume Screener — AI Recruitment Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Header Navigation -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-eyebrow">RECRUITMENT INTELLIGENCE</div>
+          <h1 class="brand-title">Smart Resume Screener <span class="badge-ai">AI</span></h1>
+        </div>
+      </div>
+      <div class="header-status">
+        <div id="systemBadge" class="system-badge">
+          <span class="status-dot"></span>
+          <span id="systemModeText">Initializing...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Metrics Banner -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="statJobs">0</div>
+        <div class="stat-label">Active Job Roles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statCandidates">0</div>
+        <div class="stat-label">Parsed Resumes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statShortlisted">0</div>
+        <div class="stat-label">Shortlisted Candidates</div>
+      </div>
+      <div class="stat-card highlight">
+        <div class="stat-num" id="statAvgScore">--</div>
+        <div class="stat-label">Top Match Score</div>
+      </div>
+    </section>
+
+    <!-- Top Grid: Job Creator & Resume Uploader -->
+    <main class="grid-layout">
+      <!-- Step 1: Job Creator -->
+      <section class="card panel">
+        <div class="panel-header">
+          <div class="step-badge">01</div>
+          <div>
+            <h2>Define Job Description</h2>
+            <p class="panel-subtitle">Post a job or use pre-loaded role templates.</p>
+          </div>
+        </div>
+
+        <div class="template-chips">
+          <span class="chip-label">Quick Templates:</span>
+          <button type="button" class="chip" onclick="fillJobTemplate('backend')">Java Backend</button>
+          <button type="button" class="chip" onclick="fillJobTemplate('fullstack')">Full Stack</button>
+          <button type="button" class="chip" onclick="fillJobTemplate('data')">Data Scientist</button>
+        </div>
+
+        <div class="form-group">
+          <label for="jobTitle">Job Title</label>
+          <input id="jobTitle" type="text" placeholder="e.g. Senior Java Backend Engineer" autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="jobDesc">Job Description & Requirements</label>
+          <textarea id="jobDesc" rows="8" placeholder="Paste the job description, required skills, and responsibilities..."></textarea>
+        </div>
+
+        <div class="panel-actions">
+          <button id="btnCreateJob" class="btn btn-primary" onclick="handleCreateJob()">
+            <span>Create Job Posting</span>
+          </button>
+        </div>
+        <div id="jobAlert" class="alert-box hidden"></div>
+      </section>
+
+      <!-- Step 2: Resume Parser / Uploader -->
+      <section class="card panel">
+        <div class="panel-header">
+          <div class="step-badge">02</div>
+          <div>
+            <h2>Upload Candidate Resumes</h2>
+            <p class="panel-subtitle">Multi-file PDF, TXT, or MD resume intake.</p>
+          </div>
+        </div>
+
+        <div class="dropzone" id="dropzone">
+          <input id="resumeFiles" type="file" multiple accept=".pdf,.txt,.md" onchange="handleFileSelection(this)">
+          <div class="drop-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <strong class="drop-title">Drag & drop candidate resumes here</strong>
+          <span class="drop-hint">Supports PDF, Plain Text (.txt), and Markdown (.md)</span>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('resumeFiles').click()">Browse Files</button>
+        </div>
+
+        <div id="fileListSummary" class="file-list-preview hidden"></div>
+
+        <div class="panel-actions">
+          <button id="btnUpload" class="btn btn-primary" onclick="handleUploadCandidates()">
+            <span>Parse & Save Resumes</span>
+          </button>
+        </div>
+        <div id="candidateAlert" class="alert-box hidden"></div>
+      </section>
+    </main>
+
+    <!-- Step 3: Screening & Ranking Results Dashboard -->
+    <section class="card panel results-panel">
+      <div class="results-toolbar">
+        <div class="results-heading">
+          <div class="step-badge">03</div>
+          <div>
+            <h2>Screening & Ranking Dashboard</h2>
+            <p class="panel-subtitle">Intelligent semantic evaluation, subscores, and evidence maps.</p>
+          </div>
+        </div>
+
+        <div class="results-controls">
+          <div class="job-select-wrapper">
+            <label for="jobSelect">Select Role:</label>
+            <select id="jobSelect" onchange="handleJobChange()"></select>
+          </div>
+          <button id="btnScreen" class="btn btn-accent" onclick="handleScreen()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Screen Candidates</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Tabs & Export -->
+      <div class="results-filter-bar">
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="setFilter('all', this)">All Candidates (<span id="countAll">0</span>)</button>
+          <button class="filter-tab" onclick="setFilter('Shortlisted', this)">Shortlisted (<span id="countShortlisted">0</span>)</button>
+          <button class="filter-tab" onclick="setFilter('Under Review', this)">Under Review (<span id="countReview">0</span>)</button>
+          <button class="filter-tab" onclick="setFilter('Not Recommended', this)">Not Recommended (<span id="countRejected">0</span>)</button>
+        </div>
+        <div class="export-actions">
+          <button class="btn btn-outline btn-sm" onclick="exportReport('csv')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export CSV
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="exportReport('json')">Export JSON</button>
+        </div>
+      </div>
+
+      <!-- Candidate Results List -->
+      <div id="resultsContainer" class="results-list">
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <h3>Ready for screening</h3>
+          <p>Create a job, upload resumes, and click <strong>"Screen Candidates"</strong> to generate explainable match scores.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Evidence Inspection Modal -->
+  <div id="evidenceModal" class="modal-overlay hidden" onclick="handleModalBackdropClick(event)">
+    <div class="modal-window">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div id="modalContent" class="modal-body">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
